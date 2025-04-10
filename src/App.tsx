@@ -18,6 +18,7 @@ import AdminDashboard from "@/pages/AdminDashboard";
 import AdminIssues from "@/pages/AdminIssues";
 import AdminIssueDetail from "@/pages/AdminIssueDetail";
 import AdminAnalytics from "@/pages/AdminAnalytics";
+import AdminUsers from "@/pages/AdminUsers";
 import NotFound from "@/pages/NotFound";
 
 // Create a new instance of QueryClient
@@ -128,6 +129,11 @@ const App = () => (
                   <Route path="admin/analytics" element={
                     <AdminRoute>
                       <AdminAnalytics />
+                    </AdminRoute>
+                  } />
+                  <Route path="admin/users" element={
+                    <AdminRoute>
+                      <AdminUsers />
                     </AdminRoute>
                   } />
                   
