@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Search, UserPlus, Mail, Filter } from 'lucide-react';
+import { toast } from 'sonner';
 
 // Mock user data - in a real app, this would come from a database
 const mockUsers = [
@@ -70,28 +71,38 @@ const mockUsers = [
   }
 ];
 
-const AdminUsers: React.FC = () => {
+const AdminUsers = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [users, setUsers] = useState(mockUsers);
   
-  // Make sure the user is logged in and is an admin
-  if (!user || user.role !== 'admin') {
-    navigate('/login');
-    return null;
-  }
-
   // Format date for display
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(date);
+    try {
+      const date = new Date(dateString);
+      return new Intl.DateTimeFormat('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(date);
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'Invalid date';
+    }
+  };
+
+  // Handle contact user (email)
+  const handleContactUser = (email: string) => {
+    toast.success(`Email link opened for ${email}`);
+    // In a real app, this would open an email client or a message form
+  };
+
+  // Handle view user details
+  const handleViewUser = (userId: string) => {
+    navigate(`/admin/users/${userId}`);
   };
 
   // Filter users based on search query
@@ -101,6 +112,12 @@ const AdminUsers: React.FC = () => {
     user.studentId.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.department.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Simple check for admin access
+  if (!user || user.role !== 'admin') {
+    navigate('/login');
+    return null;
+  }
 
   return (
     <div className="space-y-6">
@@ -120,12 +137,19 @@ const AdminUsers: React.FC = () => {
           />
         </div>
         
-        <Button variant="outline" className="md:w-auto">
+        <Button 
+          variant="outline" 
+          className="md:w-auto"
+          onClick={() => toast.info('Filter functionality coming soon')}
+        >
           <Filter className="h-4 w-4 mr-2" />
           Filter
         </Button>
         
-        <Button className="md:w-auto">
+        <Button 
+          className="md:w-auto"
+          onClick={() => toast.info('Add user functionality coming soon')}
+        >
           <UserPlus className="h-4 w-4 mr-2" />
           Add User
         </Button>
@@ -164,10 +188,18 @@ const AdminUsers: React.FC = () => {
                   <TableCell>{formatDate(user.lastActive)}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      <Button variant="ghost" size="icon">
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={() => handleContactUser(user.email)}
+                      >
                         <Mail className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="sm" onClick={() => navigate(`/admin/users/${user.id}`)}>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => handleViewUser(user.id)}
+                      >
                         View
                       </Button>
                     </div>

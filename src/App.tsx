@@ -21,8 +21,16 @@ import AdminAnalytics from "@/pages/AdminAnalytics";
 import AdminUsers from "@/pages/AdminUsers";
 import NotFound from "@/pages/NotFound";
 
-// Create a new instance of QueryClient
-const queryClient = new QueryClient();
+// Create a new instance of QueryClient with added error handling
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
 
 // Protected route component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -75,78 +83,90 @@ const DataProviderWithUser = ({ children }: { children: React.ReactNode }) => {
 };
 
 const App = () => (
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <BrowserRouter>
-          <AuthProvider>
-            <DataProviderWithUser>
-              <Routes>
-                <Route path="/" element={<Layout />}>
-                  {/* Public routes */}
-                  <Route index element={<HomePage />} />
-                  <Route path="login" element={<LoginPage />} />
-                  
-                  {/* Protected student routes */}
-                  <Route path="dashboard" element={
-                    <ProtectedRoute>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="my-issues" element={
-                    <ProtectedRoute>
-                      <MyIssues />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="my-issues/:issueId" element={
-                    <ProtectedRoute>
-                      <IssueDetail />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="new-issue" element={
-                    <ProtectedRoute>
-                      <NewIssue />
-                    </ProtectedRoute>
-                  } />
-                  
-                  {/* Admin routes */}
-                  <Route path="admin" element={
-                    <AdminRoute>
-                      <AdminDashboard />
-                    </AdminRoute>
-                  } />
-                  <Route path="admin/issues" element={
-                    <AdminRoute>
-                      <AdminIssues />
-                    </AdminRoute>
-                  } />
-                  <Route path="admin/issues/:issueId" element={
-                    <AdminRoute>
-                      <AdminIssueDetail />
-                    </AdminRoute>
-                  } />
-                  <Route path="admin/analytics" element={
-                    <AdminRoute>
-                      <AdminAnalytics />
-                    </AdminRoute>
-                  } />
-                  <Route path="admin/users" element={
-                    <AdminRoute>
-                      <AdminUsers />
-                    </AdminRoute>
-                  } />
-                  
-                  {/* Catch-all route */}
-                  <Route path="*" element={<NotFound />} />
-                </Route>
-              </Routes>
-            </DataProviderWithUser>
-          </AuthProvider>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </React.StrictMode>
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <BrowserRouter>
+        <AuthProvider>
+          <DataProviderWithUser>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                {/* Public routes */}
+                <Route index element={<HomePage />} />
+                <Route path="login" element={<LoginPage />} />
+                
+                {/* Protected student routes */}
+                <Route path="dashboard" element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="my-issues" element={
+                  <ProtectedRoute>
+                    <MyIssues />
+                  </ProtectedRoute>
+                } />
+                <Route path="my-issues/:issueId" element={
+                  <ProtectedRoute>
+                    <IssueDetail />
+                  </ProtectedRoute>
+                } />
+                <Route path="new-issue" element={
+                  <ProtectedRoute>
+                    <NewIssue />
+                  </ProtectedRoute>
+                } />
+                
+                {/* Admin routes */}
+                <Route path="admin" element={
+                  <AdminRoute>
+                    <AdminDashboard />
+                  </AdminRoute>
+                } />
+                <Route path="admin/issues" element={
+                  <AdminRoute>
+                    <AdminIssues />
+                  </AdminRoute>
+                } />
+                <Route path="admin/issues/:issueId" element={
+                  <AdminRoute>
+                    <AdminIssueDetail />
+                  </AdminRoute>
+                } />
+                <Route path="admin/analytics" element={
+                  <AdminRoute>
+                    <AdminAnalytics />
+                  </AdminRoute>
+                } />
+                <Route path="admin/users" element={
+                  <AdminRoute>
+                    <AdminUsers />
+                  </AdminRoute>
+                } />
+                <Route path="admin/users/:userId" element={
+                  <AdminRoute>
+                    <div className="p-6">
+                      <h1 className="text-2xl font-bold mb-4">User Details</h1>
+                      <p className="text-gray-600">User profile view coming soon</p>
+                      <Button 
+                        onClick={() => window.history.back()} 
+                        className="mt-4"
+                      >
+                        Back to Users
+                      </Button>
+                    </div>
+                  </AdminRoute>
+                } />
+                
+                {/* Catch-all route */}
+                <Route path="*" element={<NotFound />} />
+              </Route>
+            </Routes>
+          </DataProviderWithUser>
+        </AuthProvider>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
 );
 
 export default App;
