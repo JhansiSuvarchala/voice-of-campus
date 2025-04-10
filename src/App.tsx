@@ -1,4 +1,5 @@
 
+import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
@@ -19,6 +20,7 @@ import AdminIssueDetail from "@/pages/AdminIssueDetail";
 import AdminAnalytics from "@/pages/AdminAnalytics";
 import NotFound from "@/pages/NotFound";
 
+// Create a new instance of QueryClient
 const queryClient = new QueryClient();
 
 // Protected route component
@@ -72,71 +74,73 @@ const DataProviderWithUser = ({ children }: { children: React.ReactNode }) => {
 };
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <BrowserRouter>
-        <AuthProvider>
-          <DataProviderWithUser>
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                {/* Public routes */}
-                <Route index element={<HomePage />} />
-                <Route path="login" element={<LoginPage />} />
-                
-                {/* Protected student routes */}
-                <Route path="dashboard" element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                } />
-                <Route path="my-issues" element={
-                  <ProtectedRoute>
-                    <MyIssues />
-                  </ProtectedRoute>
-                } />
-                <Route path="my-issues/:issueId" element={
-                  <ProtectedRoute>
-                    <IssueDetail />
-                  </ProtectedRoute>
-                } />
-                <Route path="new-issue" element={
-                  <ProtectedRoute>
-                    <NewIssue />
-                  </ProtectedRoute>
-                } />
-                
-                {/* Admin routes */}
-                <Route path="admin" element={
-                  <AdminRoute>
-                    <AdminDashboard />
-                  </AdminRoute>
-                } />
-                <Route path="admin/issues" element={
-                  <AdminRoute>
-                    <AdminIssues />
-                  </AdminRoute>
-                } />
-                <Route path="admin/issues/:issueId" element={
-                  <AdminRoute>
-                    <AdminIssueDetail />
-                  </AdminRoute>
-                } />
-                <Route path="admin/analytics" element={
-                  <AdminRoute>
-                    <AdminAnalytics />
-                  </AdminRoute>
-                } />
-                
-                {/* Catch-all route */}
-                <Route path="*" element={<NotFound />} />
-              </Route>
-            </Routes>
-          </DataProviderWithUser>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <BrowserRouter>
+          <AuthProvider>
+            <DataProviderWithUser>
+              <Routes>
+                <Route path="/" element={<Layout />}>
+                  {/* Public routes */}
+                  <Route index element={<HomePage />} />
+                  <Route path="login" element={<LoginPage />} />
+                  
+                  {/* Protected student routes */}
+                  <Route path="dashboard" element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="my-issues" element={
+                    <ProtectedRoute>
+                      <MyIssues />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="my-issues/:issueId" element={
+                    <ProtectedRoute>
+                      <IssueDetail />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="new-issue" element={
+                    <ProtectedRoute>
+                      <NewIssue />
+                    </ProtectedRoute>
+                  } />
+                  
+                  {/* Admin routes */}
+                  <Route path="admin" element={
+                    <AdminRoute>
+                      <AdminDashboard />
+                    </AdminRoute>
+                  } />
+                  <Route path="admin/issues" element={
+                    <AdminRoute>
+                      <AdminIssues />
+                    </AdminRoute>
+                  } />
+                  <Route path="admin/issues/:issueId" element={
+                    <AdminRoute>
+                      <AdminIssueDetail />
+                    </AdminRoute>
+                  } />
+                  <Route path="admin/analytics" element={
+                    <AdminRoute>
+                      <AdminAnalytics />
+                    </AdminRoute>
+                  } />
+                  
+                  {/* Catch-all route */}
+                  <Route path="*" element={<NotFound />} />
+                </Route>
+              </Routes>
+            </DataProviderWithUser>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </React.StrictMode>
 );
 
 export default App;
